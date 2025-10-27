@@ -85,19 +85,7 @@ $seoSettings = $seoSettings ?: [
     <link rel="canonical" href="<?php echo rtrim($siteUrl, '/') . $currentPath; ?>">
     
     <!-- Dynamic Favicon -->
-    <?php 
-    $faviconType = getSiteSetting('favicon_type') ?: 'logo';
-    $customFaviconUrl = getSiteSetting('custom_favicon_url');
-    
-    if ($faviconType === 'custom' && $customFaviconUrl): ?>
-        <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($customFaviconUrl); ?>">
-        <link rel="shortcut icon" type="image/png" href="<?php echo htmlspecialchars($customFaviconUrl); ?>">
-    <?php elseif ($faviconType === 'logo' && file_exists('logo.png')): ?>
-        <link rel="icon" type="image/png" href="logo.png">
-        <link rel="shortcut icon" type="image/png" href="logo.png">
-    <?php else: ?>
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <?php endif; ?>
+    <?php renderFavicon(); ?>
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">

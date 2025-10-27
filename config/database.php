@@ -51,4 +51,10 @@ function getDB() {
     }
     return $db;
 }
-?>
+
+// Legacy compatibility - create $pdo variable
+try {
+    $pdo = getDB();
+} catch (Exception $e) {
+    die('Database connection failed: ' . $e->getMessage());
+}

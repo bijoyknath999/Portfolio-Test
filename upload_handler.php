@@ -58,6 +58,15 @@ try {
         if (!in_array($file['type'], $allowedTypes) && !in_array($fileExtension, $allowedExtensions)) {
             throw new Exception('Invalid file type. Only PDF files are allowed for resumes. Uploaded: ' . $file['type']);
         }
+    } elseif ($uploadType === 'favicon') {
+        // For favicons, only allow PNG and ICO
+        $allowedTypes = ['image/png', 'image/x-icon', 'image/vnd.microsoft.icon'];
+        $allowedExtensions = ['png', 'ico'];
+        $maxSize = 1 * 1024 * 1024; // 1MB for favicons
+        
+        if (!in_array($file['type'], $allowedTypes) && !in_array($fileExtension, $allowedExtensions)) {
+            throw new Exception('Invalid file type. Only PNG and ICO files are allowed for favicons. Uploaded: ' . $file['type']);
+        }
     } else {
         // For images
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
@@ -109,6 +118,10 @@ try {
             $db = getDB();
             $stmt = $db->prepare("UPDATE personal_info SET resume_file = :resume WHERE id = 1");
             $stmt->execute(['resume' => $relativePath]);
+        } elseif ($uploadType === 'favicon') {
+            // Save favicon to site settings and update favicon type
+            updateSiteSetting('uploaded_favicon', $filename);
+            updateSiteSetting('favicon_type', 'upload');
         }
         
         echo json_encode([

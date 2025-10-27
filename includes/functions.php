@@ -239,6 +239,38 @@ function getSiteSetting($key) {
     return $result ? $result['setting_value'] : null;
 }
 
+function renderFavicon($isAdminPage = false) {
+    $basePath = $isAdminPage ? '../' : '';
+    $faviconType = getSiteSetting('favicon_type') ?: 'logo';
+    $customFaviconUrl = getSiteSetting('custom_favicon_url');
+    $uploadedFavicon = getSiteSetting('uploaded_favicon');
+    
+    // Priority order: upload > custom > logo > file
+    if ($faviconType === 'upload' && $uploadedFavicon && file_exists($basePath . 'uploads/' . $uploadedFavicon)) {
+        // Use uploaded favicon
+        echo '<link rel="icon" type="image/png" href="' . $basePath . 'uploads/' . htmlspecialchars($uploadedFavicon) . '">' . "\n";
+        echo '    <link rel="shortcut icon" type="image/png" href="' . $basePath . 'uploads/' . htmlspecialchars($uploadedFavicon) . '">';
+    } elseif ($faviconType === 'custom' && !empty($customFaviconUrl)) {
+        // Use custom URL
+        echo '<link rel="icon" type="image/png" href="' . htmlspecialchars($customFaviconUrl) . '">' . "\n";
+        echo '    <link rel="shortcut icon" type="image/png" href="' . htmlspecialchars($customFaviconUrl) . '">';
+    } elseif ($faviconType === 'logo' && file_exists($basePath . 'logo.png')) {
+        // Use logo as favicon
+        echo '<link rel="icon" type="image/png" href="' . $basePath . 'logo.png">' . "\n";
+        echo '    <link rel="shortcut icon" type="image/png" href="' . $basePath . 'logo.png">';
+    } elseif ($faviconType === 'file' || file_exists($basePath . 'favicon.ico')) {
+        // Use favicon.ico file
+        echo '<link rel="icon" type="image/x-icon" href="' . $basePath . 'favicon.ico">';
+    } else {
+        // Fallback: try logo first, then favicon.ico
+        if (file_exists($basePath . 'logo.png')) {
+            echo '<link rel="icon" type="image/png" href="' . $basePath . 'logo.png">';
+        } else {
+            echo '<link rel="icon" type="image/x-icon" href="' . $basePath . 'favicon.ico">';
+        }
+    }
+}
+
 function getDefaultPersonalInfo() {
     return [
         'name' => getSiteSetting('default_name') ?: 'Bijoy Kumar Nath',

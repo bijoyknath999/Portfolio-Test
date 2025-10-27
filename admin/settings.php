@@ -99,6 +99,7 @@ $telegramNotificationsEnabled = getSiteSetting('telegram_notifications_enabled')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Portfolio Admin</title>
+    <?php renderFavicon(true); ?>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="admin-styles.css">
 </head>
@@ -291,6 +292,7 @@ $telegramNotificationsEnabled = getSiteSetting('telegram_notifications_enabled')
                                     <label for="favicon_type">Favicon Source</label>
                                     <select id="favicon_type" name="favicon_type">
                                         <option value="logo" <?php echo $faviconType === 'logo' ? 'selected' : ''; ?>>Use Logo</option>
+                                        <option value="upload" <?php echo $faviconType === 'upload' ? 'selected' : ''; ?>>Upload Favicon</option>
                                         <option value="custom" <?php echo $faviconType === 'custom' ? 'selected' : ''; ?>>Custom URL</option>
                                         <option value="file" <?php echo $faviconType === 'file' ? 'selected' : ''; ?>>Use favicon.ico</option>
                                     </select>
@@ -305,6 +307,30 @@ $telegramNotificationsEnabled = getSiteSetting('telegram_notifications_enabled')
                                     <i class="fas fa-save"></i> Save Favicon Settings
                                 </button>
                             </form>
+                            
+                            <!-- Favicon Upload Section -->
+                            <div id="favicon-upload-section" style="margin-top: 20px; <?php echo $faviconType === 'upload' ? '' : 'display: none;'; ?>">
+                                <div class="image-upload-area" onclick="document.getElementById('faviconImageInput').click()">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="upload-text">Click to upload favicon</div>
+                                    <div class="upload-hint">PNG, ICO up to 1MB (recommended: 32x32px or 64x64px)</div>
+                                    <input type="file" id="faviconImageInput" accept="image/png,image/x-icon,image/ico" style="display: none;">
+                                    <div class="upload-progress" style="display: none;">
+                                        <div class="upload-progress-bar"></div>
+                                    </div>
+                                </div>
+                                <?php 
+                                $uploadedFavicon = getSiteSetting('uploaded_favicon');
+                                if ($uploadedFavicon && file_exists('../uploads/' . $uploadedFavicon)): 
+                                ?>
+                                <div style="margin-top: 15px;">
+                                    <strong>Current Favicon:</strong><br>
+                                    <img src="../uploads/<?php echo htmlspecialchars($uploadedFavicon); ?>?v=<?php echo time(); ?>" alt="Current Favicon" class="image-preview" style="max-width: 64px;">
+                                </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -657,18 +683,78 @@ $telegramNotificationsEnabled = getSiteSetting('telegram_notifications_enabled')
             });
         }
         
-        // Toggle favicon custom URL field
+        // Toggle favicon custom URL field and upload section
         const faviconTypeSelect = document.getElementById('favicon_type');
         if (faviconTypeSelect) {
             faviconTypeSelect.addEventListener('change', function() {
                 const customFaviconGroup = document.getElementById('custom-favicon-group');
+                const faviconUploadSection = document.getElementById('favicon-upload-section');
+                
                 if (customFaviconGroup) {
-                    if (this.value === 'custom') {
-                        customFaviconGroup.style.display = 'block';
-                    } else {
-                        customFaviconGroup.style.display = 'none';
-                    }
+                    customFaviconGroup.style.display = this.value === 'custom' ? 'block' : 'none';
                 }
+                if (faviconUploadSection) {
+                    faviconUploadSection.style.display = this.value === 'upload' ? 'block' : 'none';
+                }
+            });
+        }
+        
+        // Favicon upload functionality
+        const faviconInput = document.getElementById('faviconImageInput');
+        if (faviconInput) {
+            faviconInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'favicon');
+                
+                const progressBar = document.querySelectorAll('.upload-progress-bar')[1]; // Second progress bar
+                const progress = document.querySelectorAll('.upload-progress')[1];
+                const uploadArea = document.querySelectorAll('.image-upload-area')[1];
+                
+                progress.style.display = 'block';
+                uploadArea.style.pointerEvents = 'none';
+                
+                fetch('../upload_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        const notification = document.createElement('div');
+                        notification.className = 'notification success';
+                        notification.innerHTML = '<i class="fas fa-check"></i> Favicon uploaded successfully!';
+                        document.querySelector('.main-content').insertBefore(notification, document.querySelector('.settings-grid'));
+                        
+                        // Refresh page to show new favicon
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        alert('Upload failed: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Upload error:', error);
+                    alert('Upload failed. Please try again.');
+                })
+                .finally(() => {
+                    progress.style.display = 'none';
+                    uploadArea.style.pointerEvents = 'auto';
+                    progressBar.style.width = '0%';
+                });
+                
+                // Simulate progress
+                let width = 0;
+                const interval = setInterval(() => {
+                    width += 10;
+                    progressBar.style.width = width + '%';
+                    if (width >= 90) clearInterval(interval);
+                }, 100);
             });
         }
         

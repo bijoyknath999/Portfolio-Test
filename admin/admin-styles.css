@@ -31,7 +31,7 @@ body {
 /* Sidebar - Modern Glassmorphism */
 .sidebar {
     width: 280px;
-    background: rgba(102, 126, 234, 0.95);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     color: white;
@@ -40,18 +40,6 @@ body {
     overflow-y: auto;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
     z-index: 100;
-}
-
-.sidebar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--primary-gradient);
-    opacity: 0.9;
-    z-index: -1;
 }
 
 .sidebar-header {

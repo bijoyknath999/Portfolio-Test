@@ -114,7 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
                 
             } catch (PDOException $e) {
-                $pdo->rollBack();
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
                 $error = "❌ Failed to import database: " . $e->getMessage();
             }
         }
@@ -135,17 +137,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 // Check if admin table exists and has users
-                $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'admin'");
+                $stmt = $pdo->query("SELECT COUNT(*) FROM admin_users");
                 $adminCount = $stmt->fetchColumn();
                 
                 if ($adminCount > 0) {
                     // Update existing admin
-                    $stmt = $pdo->prepare("UPDATE users SET username = ?, password = ?, email = ? WHERE role = 'admin' LIMIT 1");
+                    $stmt = $pdo->prepare("UPDATE admin_users SET username = ?, password = ?, email = ? LIMIT 1");
                     $stmt->execute([$username, password_hash($password, PASSWORD_DEFAULT), $email]);
                     $message = "✅ Admin user updated successfully!";
                 } else {
                     // Create new admin
-                    $stmt = $pdo->prepare("INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, 'admin')");
+                    $stmt = $pdo->prepare("INSERT INTO admin_users (username, password, email) VALUES (?, ?, ?)");
                     $stmt->execute([$username, password_hash($password, PASSWORD_DEFAULT), $email]);
                     $message = "✅ Admin user created successfully!";
                 }
