@@ -6,6 +6,7 @@ $personalInfo = getPersonalInfo();
 $projectsCount = count(getProjects());
 $experienceCount = count(getExperience());
 $messagesCount = count(getContactMessages('new'));
+$totalVisitors = getTotalVisitors();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,12 +65,12 @@ $messagesCount = count(getContactMessages('new'));
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-icon themes">
-                        <i class="fas fa-palette"></i>
+                    <div class="stat-icon visitors">
+                        <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-content">
-                        <h3><?php echo count(getColorThemes()); ?></h3>
-                        <p>Color Themes</p>
+                        <h3><?php echo number_format($totalVisitors); ?></h3>
+                        <p>Total Visitors</p>
                     </div>
                 </div>
             </div>

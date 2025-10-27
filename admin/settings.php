@@ -36,7 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'default_phone' => sanitizeInput($_POST['default_phone'] ?? ''),
         'default_location' => sanitizeInput($_POST['default_location'] ?? ''),
         'maintenance_mode' => isset($_POST['maintenance_mode']) ? 'true' : 'false',
-        'show_theme_selector' => isset($_POST['show_theme_selector']) ? 'true' : 'false'
+        'show_theme_selector' => isset($_POST['show_theme_selector']) ? 'true' : 'false',
+        'telegram_bot_token' => sanitizeInput($_POST['telegram_bot_token'] ?? ''),
+        'telegram_chat_id' => sanitizeInput($_POST['telegram_chat_id'] ?? ''),
+        'telegram_notifications_enabled' => isset($_POST['telegram_notifications_enabled']) ? 'true' : 'false'
     ];
     
     $success = true;
@@ -86,6 +89,9 @@ $defaultPhone = getSiteSetting('default_phone') ?: '+8801831980819';
 $defaultLocation = getSiteSetting('default_location') ?: 'Dhaka, Bangladesh';
 $maintenanceMode = getSiteSetting('maintenance_mode') === 'true';
 $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
+$telegramBotToken = getSiteSetting('telegram_bot_token') ?: '';
+$telegramChatId = getSiteSetting('telegram_chat_id') ?: '';
+$telegramNotificationsEnabled = getSiteSetting('telegram_notifications_enabled') === 'true';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,131 +113,198 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
 
             <?php echo $message; ?>
 
+            <!-- Feature Toggles Section (Full Width) -->
+            <div class="settings-card-full">
+                <div class="card-header">
+                    <h3><i class="fas fa-toggle-on"></i> Feature Toggles</h3>
+                    <p style="font-size: 0.9rem; color: #666; margin: 5px 0 0 0;">Enable or disable features across your portfolio</p>
+                </div>
+                <div class="card-content">
+                    <form method="POST">
+                        <div class="toggles-grid">
+                            <div class="toggle-item">
+                                <div class="toggle-header">
+                                    <i class="fas fa-tools"></i>
+                                    <div>
+                                        <h4>Maintenance Mode</h4>
+                                        <p>Put site in maintenance mode</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="maintenance_mode" <?php echo $maintenanceMode ? 'checked' : ''; ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-header">
+                                    <i class="fas fa-envelope"></i>
+                                    <div>
+                                        <h4>Contact Form</h4>
+                                        <p>Enable contact form on website</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="contact_form_enabled" <?php echo $contactFormEnabled ? 'checked' : ''; ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-header">
+                                    <i class="fas fa-palette"></i>
+                                    <div>
+                                        <h4>Theme Selector</h4>
+                                        <p>Show theme selector on website</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="show_theme_selector" <?php echo $showThemeSelector ? 'checked' : ''; ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-header">
+                                    <i class="fab fa-telegram"></i>
+                                    <div>
+                                        <h4>Telegram Notifications</h4>
+                                        <p>Get visitor alerts on Telegram</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="telegram_notifications_enabled" <?php echo $telegramNotificationsEnabled ? 'checked' : ''; ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-item">
+                                <div class="toggle-header">
+                                    <i class="fas fa-server"></i>
+                                    <div>
+                                        <h4>SMTP Email</h4>
+                                        <p>Use SMTP for sending emails</p>
+                                    </div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="smtp_enabled" <?php echo $smtpEnabled ? 'checked' : ''; ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="button-group" style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save All Toggles
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="settings-grid">
                 <!-- Basic Settings Card -->
+                <!-- General Settings Card -->
                 <div class="settings-card">
                     <div class="card-header">
-                        <h3><i class="fas fa-cog"></i> Basic Settings</h3>
+                        <h3><i class="fas fa-cog"></i> General Settings</h3>
                     </div>
                     <div class="card-content">
                         <form method="POST">
                             <div class="form-group">
-                                <label for="site_name">Site Name</label>
+                                <label for="site_name">
+                                    <i class="fas fa-globe"></i> Site Name *
+                                </label>
                                 <input type="text" id="site_name" name="site_name" value="<?php echo htmlspecialchars($siteName); ?>" required>
+                                <small class="form-text">Your website's name</small>
                             </div>
+                            
                             <div class="form-group">
-                                <label for="site_tagline">Site Tagline</label>
+                                <label for="site_tagline">
+                                    <i class="fas fa-tag"></i> Site Tagline
+                                </label>
                                 <input type="text" id="site_tagline" name="site_tagline" value="<?php echo htmlspecialchars($siteTagline); ?>">
+                                <small class="form-text">Brief description or slogan</small>
                             </div>
+                            
                             <div class="form-group">
-                                <label for="site_url">Site URL</label>
+                                <label for="site_url">
+                                    <i class="fas fa-link"></i> Site URL
+                                </label>
                                 <input type="url" id="site_url" name="site_url" value="<?php echo htmlspecialchars($siteUrl); ?>" placeholder="https://yoursite.com">
+                                <small class="form-text">Your website's URL</small>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Contact Settings Card -->
-                <div class="settings-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-envelope"></i> Contact Settings</h3>
-                    </div>
-                    <div class="card-content">
-                        <form method="POST">
+                            
                             <div class="form-group">
-                                <label for="contact_form_email">Contact Email</label>
-                                <input type="email" id="contact_form_email" name="contact_form_email" value="<?php echo htmlspecialchars($contactFormEmail); ?>" required>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="contact_form_enabled" <?php echo $contactFormEnabled ? 'checked' : ''; ?>>
-                                    Enable Contact Form
+                                <label for="google_analytics_id">
+                                    <i class="fas fa-chart-line"></i> Google Analytics ID
                                 </label>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Analytics & SEO Card -->
-                <div class="settings-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-chart-line"></i> Analytics & SEO</h3>
-                    </div>
-                    <div class="card-content">
-                        <form method="POST">
-                            <div class="form-group">
-                                <label for="google_analytics_id">Google Analytics ID</label>
                                 <input type="text" id="google_analytics_id" name="google_analytics_id" value="<?php echo htmlspecialchars($googleAnalyticsId); ?>" placeholder="G-XXXXXXXXXX">
+                                <small class="form-text">Track your website visitors (optional)</small>
                             </div>
+                            
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-save"></i> Save General Settings
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Appearance Settings Card -->
+                <!-- Branding & Appearance Card -->
                 <div class="settings-card">
                     <div class="card-header">
-                        <h3><i class="fas fa-palette"></i> Appearance</h3>
+                        <h3><i class="fas fa-palette"></i> Branding & Appearance</h3>
                     </div>
                     <div class="card-content">
-                        <form method="POST">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="show_theme_selector" <?php echo $showThemeSelector ? 'checked' : ''; ?>>
-                                    Show Theme Selector
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label for="favicon_type">Favicon Source</label>
-                                <select id="favicon_type" name="favicon_type">
-                                    <option value="logo" <?php echo $faviconType === 'logo' ? 'selected' : ''; ?>>Use Logo</option>
-                                    <option value="custom" <?php echo $faviconType === 'custom' ? 'selected' : ''; ?>>Custom URL</option>
-                                    <option value="file" <?php echo $faviconType === 'file' ? 'selected' : ''; ?>>Use favicon.ico</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="custom-favicon-group" style="<?php echo $faviconType === 'custom' ? '' : 'display: none;'; ?>">
-                                <label for="custom_favicon_url">Custom Favicon URL</label>
-                                <input type="url" id="custom_favicon_url" name="custom_favicon_url" value="<?php echo htmlspecialchars($customFaviconUrl); ?>" placeholder="https://example.com/favicon.png">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Logo Upload Card -->
-                <div class="settings-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-image"></i> Website Logo</h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="logo-upload-area">
-                            <div class="image-upload-area" onclick="document.getElementById('logoImageInput').click()">
-                                <div class="upload-icon">
-                                    <i class="fas fa-cloud-upload-alt"></i>
+                        <!-- Logo Upload Section -->
+                        <div class="form-section">
+                            <h4 style="margin: 0 0 15px 0; color: #667eea; font-size: 1rem;">
+                                <i class="fas fa-image"></i> Website Logo
+                            </h4>
+                            <div class="logo-upload-area">
+                                <div class="image-upload-area" onclick="document.getElementById('logoImageInput').click()">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">Click to upload website logo</div>
+                                    <div class="upload-hint">PNG, JPG, SVG up to 2MB (recommended: 200x200px)</div>
+                                    <input type="file" id="logoImageInput" accept="image/*" style="display: none;">
+                                    <div class="upload-progress" style="display: none;">
+                                        <div class="upload-progress-bar"></div>
+                                    </div>
                                 </div>
-                                <div class="upload-text">Click to upload website logo</div>
-                                <div class="upload-hint">PNG, JPG, SVG up to 2MB (recommended: 200x200px)</div>
-                                <input type="file" id="logoImageInput" accept="image/*" style="display: none;">
-                                <div class="upload-progress" style="display: none;">
-                                    <div class="upload-progress-bar"></div>
+                                <?php if (file_exists('../logo.png')): ?>
+                                <div style="margin-top: 15px;">
+                                    <strong>Current Logo:</strong><br>
+                                    <img src="../logo.png?v=<?php echo time(); ?>" alt="Current Logo" class="image-preview">
                                 </div>
+                                <?php endif; ?>
                             </div>
-                            <?php if (file_exists('../logo.png')): ?>
-                            <div style="margin-top: 15px;">
-                                <strong>Current Logo:</strong><br>
-                                <img src="../logo.png?v=<?php echo time(); ?>" alt="Current Logo" class="image-preview">
-                            </div>
-                            <?php endif; ?>
+                        </div>
+                        
+                        <!-- Favicon Settings Section -->
+                        <div class="form-section" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(102, 126, 234, 0.1);">
+                            <h4 style="margin: 0 0 15px 0; color: #667eea; font-size: 1rem;">
+                                <i class="fas fa-star"></i> Favicon Settings
+                            </h4>
+                            <form method="POST">
+                                <div class="form-group">
+                                    <label for="favicon_type">Favicon Source</label>
+                                    <select id="favicon_type" name="favicon_type">
+                                        <option value="logo" <?php echo $faviconType === 'logo' ? 'selected' : ''; ?>>Use Logo</option>
+                                        <option value="custom" <?php echo $faviconType === 'custom' ? 'selected' : ''; ?>>Custom URL</option>
+                                        <option value="file" <?php echo $faviconType === 'file' ? 'selected' : ''; ?>>Use favicon.ico</option>
+                                    </select>
+                                    <small class="form-text">Choose where to get your favicon from</small>
+                                </div>
+                                <div class="form-group" id="custom-favicon-group" style="<?php echo $faviconType === 'custom' ? '' : 'display: none;'; ?>">
+                                    <label for="custom_favicon_url">Custom Favicon URL</label>
+                                    <input type="url" id="custom_favicon_url" name="custom_favicon_url" value="<?php echo htmlspecialchars($customFaviconUrl); ?>" placeholder="https://example.com/favicon.png">
+                                    <small class="form-text">URL to your custom favicon image</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-save"></i> Save Favicon Settings
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -239,44 +312,41 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
                 <!-- Default Values Card -->
                 <div class="settings-card">
                     <div class="card-header">
-                        <h3><i class="fas fa-user-circle"></i> Default Profile</h3>
+                        <h3><i class="fas fa-user-circle"></i> Fallback Profile</h3>
                     </div>
                     <div class="card-content">
+                        <div class="notification info" style="margin-bottom: 20px;">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> These values are used as fallbacks when personal information is not available.
+                        </div>
+                        
                         <form method="POST">
                             <div class="form-group">
-                                <label for="default_name">Default Name</label>
-                                <input type="text" id="default_name" name="default_name" value="<?php echo htmlspecialchars($defaultName); ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="default_title">Default Title</label>
-                                <input type="text" id="default_title" name="default_title" value="<?php echo htmlspecialchars($defaultTitle); ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="default_email">Default Email</label>
-                                <input type="email" id="default_email" name="default_email" value="<?php echo htmlspecialchars($defaultEmail); ?>">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- System Settings Card -->
-                <div class="settings-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-tools"></i> System</h3>
-                    </div>
-                    <div class="card-content">
-                        <form method="POST">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="maintenance_mode" <?php echo $maintenanceMode ? 'checked' : ''; ?>>
-                                    Maintenance Mode
+                                <label for="default_name">
+                                    <i class="fas fa-user"></i> Default Name
                                 </label>
+                                <input type="text" id="default_name" name="default_name" value="<?php echo htmlspecialchars($defaultName); ?>">
+                                <small class="form-text">Fallback name to display</small>
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="default_title">
+                                    <i class="fas fa-briefcase"></i> Default Title
+                                </label>
+                                <input type="text" id="default_title" name="default_title" value="<?php echo htmlspecialchars($defaultTitle); ?>">
+                                <small class="form-text">Fallback job title or role</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="default_email">
+                                    <i class="fas fa-envelope"></i> Default Email
+                                </label>
+                                <input type="email" id="default_email" name="default_email" value="<?php echo htmlspecialchars($defaultEmail); ?>">
+                                <small class="form-text">Fallback email address</small>
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-save"></i> Save Fallback Settings
                             </button>
                         </form>
                     </div>
@@ -288,12 +358,17 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
                     </div>
                     <div class="card-content">
                         <form method="POST">
+                            <div class="notification info" style="margin-bottom: 20px;">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Note:</strong> Enable/disable Contact Form in the Feature Toggles section above.
+                            </div>
+                            
                             <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="contact_form_enabled" <?php echo $contactFormEnabled ? 'checked' : ''; ?>>
-                                    Enable Contact Form
+                                <label for="contact_form_email">
+                                    <i class="fas fa-envelope"></i> Contact Email *
                                 </label>
-                                <small>Show/hide the contact form on your portfolio</small>
+                                <input type="email" id="contact_form_email" name="contact_form_email" value="<?php echo htmlspecialchars($contactFormEmail); ?>" placeholder="your-email@example.com" required>
+                                <small class="form-text">Email address where contact form submissions will be sent</small>
                             </div>
                             
                             <div class="form-group">
@@ -333,12 +408,14 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
                     </div>
                     <div class="card-content">
                         <form method="POST">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" name="smtp_enabled" <?php echo $smtpEnabled ? 'checked' : ''; ?>>
-                                    Enable SMTP Email Notifications
-                                </label>
-                                <small>Enable this to send email notifications when contact forms are submitted</small>
+                            <div class="notification info" style="margin-bottom: 15px;">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Note:</strong> Enable SMTP in the Feature Toggles section above to configure email settings.
+                            </div>
+                            
+                            <div class="notification warning" style="margin-bottom: 20px;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Why SMTP?</strong> PHP's built-in mail() function often fails or goes to spam. SMTP provides reliable email delivery to Gmail and other providers with proper authentication.
                             </div>
                             
                             <div id="smtp-settings" style="<?php echo $smtpEnabled ? '' : 'display: none;'; ?>">
@@ -402,6 +479,80 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
                     </div>
                 </div>
 
+                <!-- Telegram Notifications -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fab fa-telegram"></i> Telegram Notifications</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="notification info" style="margin-bottom: 20px;">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> Enable Telegram Notifications in the Feature Toggles section above to configure settings.
+                        </div>
+                        
+                        <div id="telegram-settings" style="<?php echo $telegramNotificationsEnabled ? '' : 'display: none;'; ?>">
+                            <p class="card-description" style="margin-bottom: 20px;">
+                                <i class="fas fa-bell"></i>
+                                Get instant Telegram notifications when someone visits your website for the first time. Set up your Telegram bot to receive real-time alerts.
+                            </p>
+                            
+                            <div class="telegram-setup-guide">
+                            <h4><i class="fas fa-robot"></i> How to Set Up Telegram Bot:</h4>
+                            <ol>
+                                <li>Open Telegram and search for <strong>@BotFather</strong></li>
+                                <li>Send <code>/newbot</code> command to create a new bot</li>
+                                <li>Follow the instructions and copy your <strong>Bot Token</strong></li>
+                                <li>Start a chat with your bot and send any message</li>
+                                <li>Visit this URL in your browser (replace YOUR_BOT_TOKEN):
+                                    <div class="url-box">https://api.telegram.org/bot<strong>YOUR_BOT_TOKEN</strong>/getUpdates</div>
+                                </li>
+                                <li>Find your <strong>Chat ID</strong> in the JSON response (look for "chat":{"id":...})</li>
+                                <li>Enter both values below and click "Test Connection"</li>
+                            </ol>
+                        </div>
+                        
+                        <form method="POST" id="telegramForm">
+                            <div class="form-group">
+                                <label for="telegram_bot_token">
+                                    <i class="fas fa-key"></i> Telegram Bot Token *
+                                </label>
+                                <input type="text" 
+                                       id="telegram_bot_token" 
+                                       name="telegram_bot_token" 
+                                       value="<?php echo htmlspecialchars($telegramBotToken); ?>" 
+                                       placeholder="1234567890:ABCdefGHIjklMNOpqrsTUVwxyz"
+                                       class="form-control">
+                                <small class="form-text">Get this from @BotFather on Telegram</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="telegram_chat_id">
+                                    <i class="fas fa-user"></i> Telegram Chat ID *
+                                </label>
+                                <input type="text" 
+                                       id="telegram_chat_id" 
+                                       name="telegram_chat_id" 
+                                       value="<?php echo htmlspecialchars($telegramChatId); ?>" 
+                                       placeholder="123456789"
+                                       class="form-control">
+                                <small class="form-text">Your unique chat ID from getUpdates</small>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button type="button" class="btn btn-outline" id="testTelegramBtn">
+                                    <i class="fas fa-vial"></i> Test Connection
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Telegram Settings
+                                </button>
+                            </div>
+                            
+                            <div id="telegramTestResult" style="display: none; margin-top: 15px;"></div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="dashboard-card">
                     <div class="card-header">
                         <h3>System Information</h3>
@@ -461,6 +612,50 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded - Settings page');
+        
+        // Handle SMTP toggle from Feature Toggles section
+        const smtpToggle = document.querySelector('input[name="smtp_enabled"]');
+        const smtpSettings = document.getElementById('smtp-settings');
+        
+        if (smtpToggle && smtpSettings) {
+            // Set initial state
+            smtpSettings.style.display = smtpToggle.checked ? 'block' : 'none';
+            
+            // Listen for changes
+            smtpToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    smtpSettings.style.display = 'block';
+                    // Scroll to SMTP settings
+                    setTimeout(() => {
+                        smtpSettings.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                } else {
+                    smtpSettings.style.display = 'none';
+                }
+            });
+        }
+        
+        // Handle Telegram toggle from Feature Toggles section
+        const telegramToggle = document.querySelector('input[name="telegram_notifications_enabled"]');
+        const telegramSettings = document.getElementById('telegram-settings');
+        
+        if (telegramToggle && telegramSettings) {
+            // Set initial state
+            telegramSettings.style.display = telegramToggle.checked ? 'block' : 'none';
+            
+            // Listen for changes
+            telegramToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    telegramSettings.style.display = 'block';
+                    // Scroll to Telegram settings
+                    setTimeout(() => {
+                        telegramSettings.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                } else {
+                    telegramSettings.style.display = 'none';
+                }
+            });
+        }
         
         // Toggle favicon custom URL field
         const faviconTypeSelect = document.getElementById('favicon_type');
@@ -574,6 +769,321 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
             btn.disabled = false;
         });
     }
+    
+    // Telegram test connection
+    const testTelegramBtn = document.getElementById('testTelegramBtn');
+    if (testTelegramBtn) {
+        testTelegramBtn.addEventListener('click', testTelegramConnection);
+    }
+    
+    function testTelegramConnection() {
+        const btn = document.getElementById('testTelegramBtn');
+        const resultDiv = document.getElementById('telegramTestResult');
+        const botToken = document.getElementById('telegram_bot_token').value;
+        const chatId = document.getElementById('telegram_chat_id').value;
+        
+        if (!botToken || !chatId) {
+            resultDiv.innerHTML = '<div class="notification error"><i class="fas fa-times-circle"></i> Please enter both Bot Token and Chat ID!</div>';
+            resultDiv.style.display = 'block';
+            return;
+        }
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+        btn.disabled = true;
+        
+        const formData = new FormData();
+        formData.append('bot_token', botToken);
+        formData.append('chat_id', chatId);
+        
+        fetch('telegram_test.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resultDiv.innerHTML = '<div class="notification success"><i class="fas fa-check-circle"></i> ' + data.message + '</div>';
+            } else {
+                resultDiv.innerHTML = '<div class="notification error"><i class="fas fa-times-circle"></i> ' + data.message + '</div>';
+            }
+            resultDiv.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Telegram test error:', error);
+            resultDiv.innerHTML = '<div class="notification error"><i class="fas fa-times-circle"></i> Test failed. Please check your settings.</div>';
+            resultDiv.style.display = 'block';
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }
     </script>
+    
+    <style>
+    .telegram-setup-guide {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .telegram-setup-guide h4 {
+        color: #667eea;
+        margin: 0 0 15px 0;
+        font-size: 1.1rem;
+    }
+    
+    .telegram-setup-guide ol {
+        margin: 0;
+        padding-left: 20px;
+    }
+    
+    .telegram-setup-guide li {
+        margin: 10px 0;
+        line-height: 1.6;
+    }
+    
+    .telegram-setup-guide code {
+        background: rgba(102, 126, 234, 0.1);
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #667eea;
+    }
+    
+    .badge-success {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .badge-inactive {
+        background: #e0e0e0;
+        color: #666;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .card-description {
+        background: #f8f9ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .card-description i {
+        color: #667eea;
+        margin-right: 5px;
+    }
+    
+    .url-box {
+        background: rgba(102, 126, 234, 0.05);
+        border: 2px dashed rgba(102, 126, 234, 0.3);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #667eea;
+        word-break: break-all;
+        line-height: 1.6;
+    }
+    
+    .url-box strong {
+        color: #f093fb;
+        font-weight: 700;
+    }
+    
+    /* Feature Toggles Section */
+    .settings-card-full {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .settings-card-full::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .settings-card-full:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 30px rgba(102, 126, 234, 0.15);
+    }
+    
+    .settings-card-full:hover::before {
+        opacity: 1;
+    }
+    
+    .toggles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .toggle-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        border-radius: 10px;
+        border: 2px solid rgba(102, 126, 234, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .toggle-item:hover {
+        border-color: rgba(102, 126, 234, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+    
+    .toggle-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+    
+    .toggle-header > i {
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        width: 35px;
+        text-align: center;
+    }
+    
+    .toggle-header h4 {
+        margin: 0 0 3px 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .toggle-header p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #666;
+    }
+    
+    /* Toggle Switch Styles */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+        margin: 0;
+    }
+    
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ccc;
+        transition: 0.4s;
+        border-radius: 28px;
+    }
+    
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        transition: 0.4s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+    }
+    
+    .toggle-switch:hover .toggle-slider {
+        box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* SMTP & Telegram Settings Sections */
+    #smtp-settings,
+    #telegram-settings {
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+        border-radius: 12px;
+        border: 2px solid rgba(102, 126, 234, 0.1);
+        margin-top: 15px;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .toggles-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .toggle-item {
+            padding: 15px;
+        }
+        
+        .toggle-header h4 {
+            font-size: 1rem;
+        }
+        
+        .toggle-header p {
+            font-size: 0.8rem;
+        }
+    }
+    </style>
 </body>
 </html>

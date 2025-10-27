@@ -7,6 +7,9 @@ if (getSiteSetting('maintenance_mode') === 'true') {
     exit();
 }
 
+// Track visitor
+trackVisitor();
+
 // Get dynamic data
 $personalInfo = getPersonalInfo();
 $projects = getProjects();

@@ -357,6 +357,10 @@ body {
     background: var(--success-gradient);
 }
 
+.stat-icon.visitors {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 .stat-content h3 {
     font-size: 2.2rem;
     font-weight: 800;
@@ -591,11 +595,28 @@ body {
     flex-direction: column;
     transition: var(--transition);
     border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .dashboard-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--card-shadow-hover);
+}
+
+.dashboard-card:hover::before {
+    opacity: 1;
 }
 
 .settings-grid .dashboard-card {

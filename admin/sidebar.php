@@ -37,6 +37,9 @@ $messagesCount = count(getContactMessages('new'));
             <span class="badge"><?php echo $messagesCount; ?></span>
             <?php endif; ?>
         </a>
+        <a href="visitors.php" class="nav-item <?php echo $currentPage === 'visitors.php' ? 'active' : ''; ?>">
+            <i class="fas fa-users"></i> Visitors
+        </a>
         <a href="settings.php" class="nav-item <?php echo $currentPage === 'settings.php' ? 'active' : ''; ?>">
             <i class="fas fa-cog"></i> Settings
         </a>

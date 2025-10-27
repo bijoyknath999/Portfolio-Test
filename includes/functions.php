@@ -357,4 +357,216 @@ function requireLogin() {
         exit();
     }
 }
+
+// Visitor Tracking Functions
+function trackVisitor() {
+    $db = getDB();
+    
+    // Get visitor information
+    $ip = getRealIP();
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $referrer = $_SERVER['HTTP_REFERER'] ?? 'Direct';
+    $pageVisited = $_SERVER['REQUEST_URI'] ?? '/';
+    
+    // Parse user agent
+    $browser = getBrowser($userAgent);
+    $os = getOS($userAgent);
+    $device = getDevice($userAgent);
+    
+    // Get location (you can integrate with IP geolocation API later)
+    $country = 'Unknown';
+    $city = 'Unknown';
+    
+    // Check if this IP has visited before (for unique visitor notification)
+    $checkStmt = $db->prepare("SELECT COUNT(*) as count FROM visitors WHERE ip_address = :ip");
+    $checkStmt->execute(['ip' => $ip]);
+    $previousVisits = $checkStmt->fetch()['count'];
+    $isUniqueVisitor = ($previousVisits == 0);
+    
+    // Insert visitor record
+    $sql = "INSERT INTO visitors (ip_address, user_agent, country, city, browser, os, device, referrer, page_visited) 
+            VALUES (:ip, :user_agent, :country, :city, :browser, :os, :device, :referrer, :page)";
+    
+    $stmt = $db->prepare($sql);
+    $result = $stmt->execute([
+        'ip' => $ip,
+        'user_agent' => $userAgent,
+        'country' => $country,
+        'city' => $city,
+        'browser' => $browser,
+        'os' => $os,
+        'device' => $device,
+        'referrer' => $referrer,
+        'page' => $pageVisited
+    ]);
+    
+    // Send Telegram notification ONLY for unique visitors (first-time visitors)
+    if ($result && $isUniqueVisitor) {
+        sendTelegramVisitorNotification($ip, $browser, $os, $device, $referrer);
+    }
+    
+    return $result;
+}
+
+function getRealIP() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        return $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+    }
+}
+
+function getBrowser($userAgent) {
+    if (preg_match('/MSIE/i', $userAgent)) return 'Internet Explorer';
+    if (preg_match('/Firefox/i', $userAgent)) return 'Firefox';
+    if (preg_match('/Chrome/i', $userAgent)) return 'Chrome';
+    if (preg_match('/Safari/i', $userAgent)) return 'Safari';
+    if (preg_match('/Opera/i', $userAgent)) return 'Opera';
+    if (preg_match('/Edge/i', $userAgent)) return 'Edge';
+    return 'Unknown';
+}
+
+function getOS($userAgent) {
+    if (preg_match('/Windows NT 10.0/i', $userAgent)) return 'Windows 10';
+    if (preg_match('/Windows NT 6.3/i', $userAgent)) return 'Windows 8.1';
+    if (preg_match('/Windows NT 6.2/i', $userAgent)) return 'Windows 8';
+    if (preg_match('/Windows NT 6.1/i', $userAgent)) return 'Windows 7';
+    if (preg_match('/Windows/i', $userAgent)) return 'Windows';
+    if (preg_match('/Macintosh|Mac OS X/i', $userAgent)) return 'Mac OS';
+    if (preg_match('/Linux/i', $userAgent)) return 'Linux';
+    if (preg_match('/Android/i', $userAgent)) return 'Android';
+    if (preg_match('/iOS|iPhone|iPad|iPod/i', $userAgent)) return 'iOS';
+    return 'Unknown';
+}
+
+function getDevice($userAgent) {
+    if (preg_match('/Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i', $userAgent)) {
+        if (preg_match('/iPad/i', $userAgent)) return 'Tablet';
+        return 'Mobile';
+    }
+    return 'Desktop';
+}
+
+function getVisitors($limit = null, $offset = 0) {
+    $db = getDB();
+    $sql = "SELECT * FROM visitors ORDER BY visit_date DESC";
+    if ($limit) {
+        $sql .= " LIMIT :limit OFFSET :offset";
+    }
+    $stmt = $db->prepare($sql);
+    if ($limit) {
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    }
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function getTotalVisitors() {
+    $db = getDB();
+    $stmt = $db->query("SELECT COUNT(*) as total FROM visitors");
+    $result = $stmt->fetch();
+    return $result['total'] ?? 0;
+}
+
+function getTodayVisitors() {
+    $db = getDB();
+    $stmt = $db->query("SELECT COUNT(*) as total FROM visitors WHERE DATE(visit_date) = CURDATE()");
+    $result = $stmt->fetch();
+    return $result['total'] ?? 0;
+}
+
+function getUniqueVisitors() {
+    $db = getDB();
+    $stmt = $db->query("SELECT COUNT(DISTINCT ip_address) as total FROM visitors");
+    $result = $stmt->fetch();
+    return $result['total'] ?? 0;
+}
+
+function deleteVisitor($id) {
+    $db = getDB();
+    $stmt = $db->prepare("DELETE FROM visitors WHERE id = :id");
+    return $stmt->execute(['id' => $id]);
+}
+
+// Telegram Bot Functions
+function sendTelegramVisitorNotification($ip, $browser, $os, $device, $referrer) {
+    // Check if Telegram notifications are enabled
+    $telegramEnabled = getSiteSetting('telegram_notifications_enabled');
+    if (empty($telegramEnabled) || $telegramEnabled !== 'true') {
+        return false;
+    }
+    
+    $botToken = getSiteSetting('telegram_bot_token') ?? '';
+    $chatId = getSiteSetting('telegram_chat_id') ?? '';
+    
+    if (empty($botToken) || empty($chatId)) {
+        return false;
+    }
+    
+    // Prepare message
+    $message = "🎉 *New Unique Visitor!*\n\n";
+    $message .= "🌐 *IP Address:* `$ip`\n";
+    $message .= "💻 *Browser:* $browser\n";
+    $message .= "🖥 *Operating System:* $os\n";
+    $message .= "📱 *Device:* $device\n";
+    $message .= "🔗 *Referrer:* " . ($referrer === 'Direct' ? 'Direct Visit' : $referrer) . "\n";
+    $message .= "⏰ *Time:* " . date('Y-m-d H:i:s') . "\n";
+    $message .= "\n✨ *First time visitor from this IP*";
+    
+    return sendTelegramMessage($botToken, $chatId, $message);
+}
+
+function sendTelegramMessage($botToken, $chatId, $message) {
+    $url = "https://api.telegram.org/bot$botToken/sendMessage";
+    
+    $data = [
+        'chat_id' => $chatId,
+        'text' => $message,
+        'parse_mode' => 'Markdown'
+    ];
+    
+    // Use cURL for better reliability
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // For local development
+        
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        return $result !== false && $httpCode == 200;
+    }
+    
+    // Fallback to file_get_contents
+    $options = [
+        'http' => [
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($data),
+            'timeout' => 10
+        ],
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false
+        ]
+    ];
+    
+    $context = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
+    
+    return $result !== false;
+}
+
+function testTelegramConnection($botToken, $chatId) {
+    $message = "✅ *Test Message*\n\nYour Telegram bot is connected successfully!";
+    return sendTelegramMessage($botToken, $chatId, $message);
+}
 ?>

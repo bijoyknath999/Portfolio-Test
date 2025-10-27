@@ -39,17 +39,11 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Protect config directory
-<DirectoryMatch "^.*/config/.*$">
-    Order allow,deny
-    Deny from all
-</DirectoryMatch>
+# Protect config directory with RewriteRule
+RewriteRule ^config/ - [F,L]
 
-# Allow access to specific PHP files in config (if needed by includes)
-<Files "database.php">
-    Order allow,deny
-    Deny from all
-</Files>
+# Block direct access to includes directory
+RewriteRule ^includes/ - [F,L]
 
 # Block access to SQL files
 <FilesMatch "\.(sql|sqlite|db)$">

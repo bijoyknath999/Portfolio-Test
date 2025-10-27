@@ -169,6 +169,23 @@ CREATE TABLE contact_messages (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Visitors tracking table
+CREATE TABLE visitors (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent TEXT,
+    country VARCHAR(100),
+    city VARCHAR(100),
+    browser VARCHAR(50),
+    os VARCHAR(50),
+    device VARCHAR(50),
+    referrer TEXT,
+    page_visited VARCHAR(255),
+    visit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ip (ip_address),
+    INDEX idx_date (visit_date)
+);
+
 -- Insert default admin user (password: admin123)
 INSERT INTO admin_users (username, password, email) VALUES 
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@portfolio.com');
@@ -201,4 +218,7 @@ INSERT INTO site_settings (setting_key, setting_value, setting_type) VALUES
 ('google_analytics_id', '', 'text'),
 ('contact_form_email', 'bijoyknath999@gmail.com', 'text'),
 ('maintenance_mode', 'false', 'boolean'),
-('show_theme_selector', 'true', 'boolean');
+('show_theme_selector', 'true', 'boolean'),
+('telegram_bot_token', '', 'text'),
+('telegram_chat_id', '', 'text'),
+('telegram_notifications_enabled', 'false', 'boolean');
