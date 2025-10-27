@@ -1,0 +1,107 @@
+# Portfolio .gitignore
+
+# Database Configuration (will be created by setup.php)
+config/database.php
+
+# Setup Complete Marker
+.setup_complete
+
+# Environment Variables
+.env
+.env.local
+.env.production
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Log Files
+*.log
+logs/
+error_log
+debug.log
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Node Modules (if using Node.js tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# PHP Dependencies
+vendor/
+composer.lock
+
+# Uploaded Files (optional - comment out if you want to track uploads)
+# uploads/*
+# !uploads/.gitkeep
+
+# Test and Debug Files
+test_*.php
+debug_*.php
+*_test.php
+*_debug.php
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+
+# Database Dumps (security - never commit database files)
+*.sql
+!database/portfolio.sql
+
+# Session Files
+sessions/
+*.sess
+
+# Cache Files
+cache/
+*.cache
+
+# Build Files
+dist/
+build/
+
+# Documentation Drafts
+NOTES.md
+TODO.md
+DRAFT_*.md
+
+# Local Configuration Overrides
+config.local.php
+settings.local.php
+
+# Security Files
+.htpasswd
+ssl/
+certificates/
+
+# Sensitive Data
+secrets/
+credentials/
+private/
+

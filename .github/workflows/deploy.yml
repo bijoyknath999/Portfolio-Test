@@ -1,0 +1,136 @@
+name: 🚀 Deploy to cPanel via FTP
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: 🌐 Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 📦 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: pdo, pdo_mysql, gd, mbstring
+          coverage: none
+      
+      - name: 🧪 Validate PHP Syntax
+        run: |
+          echo "🔍 Checking PHP files for syntax errors..."
+          find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \; | grep -v "No syntax errors"
+          echo "✅ PHP syntax validation complete!"
+      
+      - name: 🔒 Create Production Config Template
+        run: |
+          echo "📝 Creating production database config template..."
+          if [ ! -f "config/database.production.php" ]; then
+            cat > config/database.production.php << 'EOF'
+          <?php
+          // Production Database Configuration
+          // This file will be configured by setup.php on production server
+          define('DB_HOST', 'localhost');
+          define('DB_NAME', 'your_database_name');
+          define('DB_USER', 'your_database_user');
+          define('DB_PASS', 'your_database_password');
+
+          try {
+              $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+              $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                  PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                  PDO::ATTR_EMULATE_PREPARES => false
+              ]);
+          } catch (PDOException $e) {
+              die('Database connection failed: ' . $e->getMessage());
+          }
+          EOF
+          fi
+          echo "✅ Production config ready!"
+      
+      - name: 📋 Prepare Deployment Package
+        run: |
+          echo "🎯 Preparing files for deployment..."
+          
+          # Create temporary deployment directory
+          mkdir -p deploy_temp
+          
+          # Copy all files except excluded ones
+          rsync -av --progress . deploy_temp/ \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='.env' \
+            --exclude='.DS_Store' \
+            --exclude='*.log' \
+            --exclude='deploy_temp' \
+            --exclude='test_*.php' \
+            --exclude='debug_*.php' \
+            --exclude='TODO.md' \
+            --exclude='NOTES.md'
+          
+          echo "✅ Deployment package prepared!"
+          ls -la deploy_temp/
+      
+      - name: 🚀 Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy_temp/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/vendor/**
+            **/.DS_Store
+            **/*.log
+            .setup_complete
+      
+      - name: 🧹 Cleanup
+        if: always()
+        run: |
+          echo "🧹 Cleaning up temporary files..."
+          rm -rf deploy_temp
+          echo "✅ Cleanup complete!"
+      
+      - name: ✅ Deployment Complete
+        run: |
+          echo "════════════════════════════════════════════════════════"
+          echo "🎉 Deployment to cPanel completed successfully!"
+          echo "════════════════════════════════════════════════════════"
+          echo ""
+          echo "📍 Deployed to: ${{ secrets.FTP_SERVER }}"
+          echo "📁 Directory: ${{ secrets.FTP_SERVER_DIR }}"
+          echo "⏰ Time: $(date)"
+          echo ""
+          echo "🔗 Next Steps:"
+          echo "  1. Visit your website to verify deployment"
+          echo "  2. If first deployment, run setup.php"
+          echo "  3. Delete setup files after installation"
+          echo ""
+          echo "════════════════════════════════════════════════════════"
+      
+      - name: 📢 Notify on Failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Please check the logs above for details."
+          exit 1
+
