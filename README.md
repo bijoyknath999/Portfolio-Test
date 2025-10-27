@@ -2,7 +2,7 @@
 
 A modern, fully customizable portfolio website with an advanced admin panel and automated CI/CD deployment to cPanel.
 
-[![Deploy to cPanel](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/deploy.yml/badge.svg)](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/deploy.yml)
+[![Deploy to cPanel](https://github.com/bijoyknath999/Portfolio-Test/actions/workflows/deploy.yml/badge.svg)](https://github.com/bijoyknath999/Portfolio-Test/actions/workflows/deploy.yml)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D7.4-777BB4.svg?style=flat&logo=php)](https://www.php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-5.7+-4479A1.svg?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
