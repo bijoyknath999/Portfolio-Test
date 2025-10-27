@@ -368,10 +368,10 @@ If you like this project, please give it a ⭐️ on GitHub!
 
 ## 🔗 Links
 
-- **Live Demo:** https://yourdomain.com
-- **Admin Panel:** https://yourdomain.com/admin/
+- **Live Demo:** https://bijoyknath.top
+- **Admin Panel:** https://bijoyknath.top/admin/
 - **Documentation:** [View All Docs](/)
-- **GitHub:** [Repository](https://github.com/YOUR_USERNAME/YOUR_REPO)
+- **GitHub:** [Repository](https://github.com/bijoyknath999/Portfolio-Test)
 
 ---
 
