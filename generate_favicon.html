@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Favicon</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .favicon-canvas { border: 2px solid #ddd; margin: 20px 0; }
+        .color-input { margin: 10px; }
+        .btn { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #5a67d8; }
+    </style>
+</head>
+<body>
+    <h1>Generate Portfolio Favicon</h1>
+    <p>Create a simple favicon for your portfolio:</p>
+    
+    <div class="color-input">
+        <label>Background Color: <input type="color" id="bgColor" value="#667eea"></label>
+    </div>
+    <div class="color-input">
+        <label>Text Color: <input type="color" id="textColor" value="#ffffff"></label>
+    </div>
+    <div class="color-input">
+        <label>Text: <input type="text" id="faviconText" value="BK" maxlength="2"></label>
+    </div>
+    
+    <canvas id="faviconCanvas" class="favicon-canvas" width="32" height="32"></canvas>
+    
+    <br>
+    <button class="btn" onclick="generateFavicon()">Generate Favicon</button>
+    <button class="btn" onclick="downloadFavicon()">Download Favicon</button>
+    
+    <p><small>Instructions: Generate the favicon, download it, and replace the empty favicon.ico file in your portfolio folder.</small></p>
+    
+    <script>
+        function generateFavicon() {
+            const canvas = document.getElementById('faviconCanvas');
+            const ctx = canvas.getContext('2d');
+            const bgColor = document.getElementById('bgColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const text = document.getElementById('faviconText').value || 'BK';
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 32, 32);
+            
+            // Draw background
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Draw text
+            ctx.fillStyle = textColor;
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 16, 16);
+        }
+        
+        function downloadFavicon() {
+            const canvas = document.getElementById('faviconCanvas');
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvas.toDataURL('image/x-icon');
+            link.click();
+        }
+        
+        // Generate initial favicon
+        generateFavicon();
+        
+        // Update on input change
+        document.getElementById('bgColor').addEventListener('input', generateFavicon);
+        document.getElementById('textColor').addEventListener('input', generateFavicon);
+        document.getElementById('faviconText').addEventListener('input', generateFavicon);
+    </script>
+</body>
+</html>

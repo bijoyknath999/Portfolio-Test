@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bijoy Kumar Nath - Full-Stack & Mobile App Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Color Theme Selector -->
+    <div class="theme-selector">
+        <button class="theme-btn" onclick="changeTheme('theme-1')" data-theme="theme-1">
+            <span class="color-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-2')" data-theme="theme-2">
+            <span class="color-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-3')" data-theme="theme-3">
+            <span class="color-preview" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-4')" data-theme="theme-4">
+            <span class="color-preview" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-5')" data-theme="theme-5">
+            <span class="color-preview" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-6')" data-theme="theme-6">
+            <span class="color-preview" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-7')" data-theme="theme-7">
+            <span class="color-preview" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-8')" data-theme="theme-8">
+            <span class="color-preview" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-9')" data-theme="theme-9">
+            <span class="color-preview" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"></span>
+        </button>
+        <button class="theme-btn" onclick="changeTheme('theme-10')" data-theme="theme-10">
+            <span class="color-preview" style="background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)"></span>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Portfolio</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#experience" class="nav-link">Experience</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#education" class="nav-link">Education</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#skills" class="nav-link">Skills</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a href="Resume of Bijoy Kumar Nath.pdf" class="nav-link" download="Bijoy_Kumar_Nath_Resume.pdf">
+                        <i class="fas fa-download"></i> CV
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Hi, I'm <span class="highlight">Bijoy Kumar Nath</span>
+                    </h1>
+                    <h2 class="hero-subtitle">Full-Stack & Mobile App Developer</h2>
+                    <p class="hero-description">
+                        Experienced Full Stack App Developer with 5+ years of expertise in Android, iOS, and Web development. 
+                        Specializing in Laravel, Firebase, Flutter, and Linux. Based in Dhaka, Bangladesh.
+                        <br><strong>Available for Remote work worldwide & Onsite opportunities in Bangladesh.</strong>
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                        <a href="Resume of Bijoy Kumar Nath.pdf" class="btn btn-outline" download="Bijoy_Kumar_Nath_Resume.pdf">
+                            <i class="fas fa-download"></i> Download CV
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="profile-card">
+                        <img src="bijoy.png" alt="Bijoy Kumar Nath Profile Picture" class="profile-img">
+                        <div class="profile-info">
+                            <h3>Bijoy Kumar Nath</h3>
+                            <p>Full-Stack Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">Here are some of my recent works</p>
+            </div>
+            <div class="projects-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://placehold.co/400x250/667eea/ffffff?text=Josh+VPN" alt="Josh VPN">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://play.google.com/store/apps/details?id=root.joshvpn.dev" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Josh VPN</h3>
+                        <p class="project-description">A secure VPN mobile application providing fast and reliable internet connection with advanced security features and user-friendly interface.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Flutter</span>
+                            <span class="tech-tag">Android</span>
+                            <span class="tech-tag">VPN Protocol</span>
+                        </div>
+                        <div class="project-meta">
+                            <span class="job-type freelance">Own Project</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://placehold.co/400x250/764ba2/ffffff?text=High+on+Study" alt="High on Study">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://bijoyknath.top/assets/files/highonstudy.apk" class="project-link"><i class="fas fa-download"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">High on Study</h3>
+                        <p class="project-description">A comprehensive WordPress mobile app for educational content delivery with seamless integration and user-friendly interface for students.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Android Native</span>
+                            <span class="tech-tag">Java</span>
+                            <span class="tech-tag">WordPress API</span>
+                            <span class="tech-tag">REST API</span>
+                        </div>
+                        <div class="project-meta">
+                            <span class="job-type freelance">Client: w3edutech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://placehold.co/400x250/f5576c/ffffff?text=Parent+Box" alt="Parent Box">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://play.google.com/store/apps/details?id=com.handikapp.parentbox" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Parent Box</h3>
+                        <p class="project-description">A comprehensive parenting mobile application designed to help parents track their child's development, milestones, and activities with modern UI/UX.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Android Native</span>
+                            <span class="tech-tag">Kotlin</span>
+                            <span class="tech-tag">Firebase</span>
+                            <span class="tech-tag">Material Design</span>
+                        </div>
+                        <div class="project-meta">
+                            <span class="job-type freelance">Client: Anish NRK</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 -->
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://placehold.co/400x250/00f2fe/ffffff?text=Let%27s+Go+With+Bijoy" alt="Let's Go With Bijoy">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="https://www.youtube.com/@letsgowithbijoy3036" class="project-link"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Let's Go With Bijoy</h3>
+                        <p class="project-description">A personal vlogging YouTube channel sharing tech insights, development tutorials, and personal experiences with 5+ videos and growing community.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Video Editing</span>
+                            <span class="tech-tag">Content Creation</span>
+                            <span class="tech-tag">YouTube</span>
+                            <span class="tech-tag">Vlogging</span>
+                        </div>
+                        <div class="project-meta">
+                            <span class="job-type freelance">Personal Project</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Work Experience</h2>
+                <p class="section-subtitle">My professional journey</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-card">
+                            <div class="experience-header">
+                                <h3 class="company-name">TRY Solutions LLC</h3>
+                                <span class="job-type fulltime">Full-time</span>
+                            </div>
+                            <h4 class="role-title">App Developer</h4>
+                            <p class="duration">2023 - Present</p>
+                            <ul class="responsibilities">
+                                <li>Developed cross-platform mobile applications using Flutter and Android Native</li>
+                                <li>Implemented Firebase integration for real-time data synchronization</li>
+                                <li>Collaborated with international clients to deliver high-quality mobile solutions</li>
+                                <li>Optimized app performance and user experience across different platforms</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-card">
+                            <div class="experience-header">
+                                <h3 class="company-name">Fiverr / Upwork</h3>
+                                <span class="job-type freelance">Freelance</span>
+                            </div>
+                            <h4 class="role-title">App & Web Developer</h4>
+                            <p class="duration">2020 - Present</p>
+                            <ul class="responsibilities">
+                                <li>Developed mobile applications for international clients using Flutter and Android Native</li>
+                                <li>Created WordPress-based web solutions and mobile app integrations</li>
+                                <li>Maintained 5-star rating with 18+ happy customers</li>
+                                <li>Delivered 20+ completed projects across various domains</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-card">
+                            <div class="experience-header">
+                                <h3 class="company-name">Diligite</h3>
+                                <span class="job-type fulltime">Full-time</span>
+                            </div>
+                            <h4 class="role-title">Jr Software Engineer</h4>
+                            <p class="duration">Apr 2022 - Nov 2022</p>
+                            <ul class="responsibilities">
+                                <li>Developed and maintained mobile applications using Android Native and Flutter</li>
+                                <li>Collaborated with senior developers on complex software solutions</li>
+                                <li>Participated in code reviews and agile development processes</li>
+                                <li>Contributed to improving application performance and user experience</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="experience-card">
+                            <div class="experience-header">
+                                <h3 class="company-name">Adamas Robotics Club</h3>
+                                <span class="job-type internship">Part-time</span>
+                            </div>
+                            <h4 class="role-title">Web Maintainer</h4>
+                            <p class="duration">2018 - 2022</p>
+                            <ul class="responsibilities">
+                                <li>Maintained and updated the robotics club website during university years</li>
+                                <li>Managed web content and ensured optimal website performance</li>
+                                <li>Collaborated with club members to showcase robotics projects online</li>
+                                <li>Gained early experience in web development and content management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="education">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Education</h2>
+                <p class="section-subtitle">My academic background and qualifications</p>
+            </div>
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="education-content">
+                        <h3 class="degree-title">Bachelor Degree</h3>
+                        <h4 class="institution-name">Adamas University</h4>
+                        <p class="education-duration">2018 - 2022</p>
+                        <p class="education-description">
+                            Completed Bachelor's degree with focus on Computer Science and Software Development. 
+                            Gained strong foundation in programming, algorithms, and software engineering principles.
+                        </p>
+                        <div class="education-highlights">
+                            <span class="highlight-tag">Computer Science</span>
+                            <span class="highlight-tag">Software Engineering</span>
+                            <span class="highlight-tag">Programming</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="education-content">
+                        <h3 class="degree-title">Professional Certifications</h3>
+                        <h4 class="institution-name">Various Platforms</h4>
+                        <p class="education-duration">2020 - Present</p>
+                        <p class="education-description">
+                            Continuously updating skills through professional certifications in mobile development, 
+                            web technologies, and cloud platforms to stay current with industry trends.
+                        </p>
+                        <div class="education-highlights">
+                            <span class="highlight-tag">Mobile Development</span>
+                            <span class="highlight-tag">Web Technologies</span>
+                            <span class="highlight-tag">Cloud Platforms</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="education-card">
+                    <div class="education-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="education-content">
+                        <h3 class="degree-title">Self-Directed Learning</h3>
+                        <h4 class="institution-name">Online Platforms & Practice</h4>
+                        <p class="education-duration">2018 - Present</p>
+                        <p class="education-description">
+                            Passionate about continuous learning through online courses, documentation, and hands-on projects. 
+                            Built expertise in Flutter, Laravel, Firebase, and modern development practices.
+                        </p>
+                        <div class="education-highlights">
+                            <span class="highlight-tag">Flutter</span>
+                            <span class="highlight-tag">Laravel</span>
+                            <span class="highlight-tag">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Technical Skills</h2>
+                <p class="section-subtitle">Technologies I work with</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3 class="category-title">Mobile Development</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Flutter</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-android"></i>
+                            <span>Android</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-java"></i>
+                            <span>Java</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-code"></i>
+                            <span>Kotlin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="category-title">Web Development</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <i class="fab fa-laravel"></i>
+                            <span>Laravel</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-wordpress"></i>
+                            <span>WordPress</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-js"></i>
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-html5"></i>
+                            <span>HTML5</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-css3-alt"></i>
+                            <span>CSS3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="category-title">Backend & Cloud</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <i class="fas fa-fire"></i>
+                            <span>Firebase</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-laravel"></i>
+                            <span>Laravel</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-linux"></i>
+                            <span>Linux</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-server"></i>
+                            <span>REST APIs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3 class="category-title">Database & Tools</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <i class="fas fa-database"></i>
+                            <span>MySQL</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Version Control</span>
+                        </div>
+                        <div class="skill-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Development Tools</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Let's work together on your next project - Remote worldwide, Onsite in Bangladesh</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>bijoyknath999@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>+8801831980819</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Dhaka, Bangladesh</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/bijoyknath" class="social-link" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/bijoyknath" class="social-link" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.youtube.com/@letsgowithbijoy3036" class="social-link" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="mailto:bijoyknath999@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bijoy Kumar Nath. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
