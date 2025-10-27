@@ -1,0 +1,206 @@
+═══════════════════════════════════════════════════════════════
+   ✅ PRODUCTION DEPLOYMENT CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+📤 BEFORE UPLOADING TO CPANEL
+───────────────────────────────────────────────────────────────
+
+[ ] Backup your local database (if needed)
+[ ] Test setup.php locally to ensure it works
+[ ] Prepare your cPanel database credentials
+[ ] Have your hosting FTP/File Manager access ready
+
+───────────────────────────────────────────────────────────────
+
+🌐 UPLOAD TO CPANEL
+───────────────────────────────────────────────────────────────
+
+1. LOGIN TO CPANEL
+   [ ] Access your hosting cPanel
+   [ ] Navigate to File Manager
+   
+2. UPLOAD FILES
+   [ ] Go to public_html/ (or your domain folder)
+   [ ] Upload ALL files from portfolio folder
+   [ ] Ensure folder structure is preserved
+   [ ] Check that uploads/ folder exists (create if not)
+
+3. SET PERMISSIONS
+   [ ] uploads/ → 755
+   [ ] config/ → 755 (will be created by setup)
+
+───────────────────────────────────────────────────────────────
+
+🗄️ DATABASE SETUP IN CPANEL
+───────────────────────────────────────────────────────────────
+
+1. CREATE DATABASE
+   [ ] Go to cPanel → MySQL Databases
+   [ ] Create new database (e.g., username_portfolio)
+   [ ] Note the full database name
+
+2. CREATE DATABASE USER
+   [ ] Create new MySQL user
+   [ ] Set a strong password
+   [ ] Note username and password
+
+3. ASSIGN USER TO DATABASE
+   [ ] Add user to database
+   [ ] Grant ALL PRIVILEGES
+   [ ] Save changes
+
+───────────────────────────────────────────────────────────────
+
+🚀 RUN SETUP WIZARD
+───────────────────────────────────────────────────────────────
+
+1. ACCESS SETUP
+   [ ] Open: https://yourdomain.com/setup.php
+   
+2. STEP 1 - Database Config
+   [ ] Enter database host (usually 'localhost')
+   [ ] Enter database name (from cPanel)
+   [ ] Enter database username (from cPanel)
+   [ ] Enter database password (from cPanel)
+   [ ] Click Continue
+   
+3. STEP 2 - Import Database
+   [ ] Click "Import Database" button
+   [ ] Wait for success message
+   
+4. STEP 3 - Create Admin
+   [ ] Enter admin username
+   [ ] Enter admin email
+   [ ] Enter strong password (minimum 6 characters)
+   [ ] Confirm password
+   [ ] Click "Create Admin & Finish"
+   
+5. STEP 4 - Complete!
+   [ ] See success message
+   [ ] Click "Go to Admin Login"
+
+───────────────────────────────────────────────────────────────
+
+🔒 POST-INSTALLATION SECURITY
+───────────────────────────────────────────────────────────────
+
+IMMEDIATELY DELETE THESE FILES (IMPORTANT!):
+[ ] setup.php
+[ ] .setup_complete
+[ ] INSTALLATION.txt
+[ ] PRODUCTION_CHECKLIST.txt
+[ ] UPLOAD_TO_CPANEL.txt
+[ ] database/portfolio.sql (optional - keep for backup)
+
+You can delete via:
+- cPanel File Manager
+- FTP client
+- SSH command: rm setup.php .setup_complete
+
+───────────────────────────────────────────────────────────────
+
+🎨 CONFIGURE YOUR PORTFOLIO
+───────────────────────────────────────────────────────────────
+
+1. LOGIN TO ADMIN
+   [ ] Go to: https://yourdomain.com/admin/login.php
+   [ ] Use credentials created in setup
+   
+2. UPDATE PERSONAL INFO
+   [ ] Admin → Personal Info
+   [ ] Add your name, title, bio
+   [ ] Upload profile picture
+   [ ] Upload your CV/Resume
+   [ ] Set typing animation roles
+   
+3. CONFIGURE SETTINGS
+   [ ] Admin → Settings
+   [ ] Upload website logo
+   [ ] Set site name
+   [ ] Configure contact email
+   [ ] Set timezone
+   
+4. ADD CONTENT
+   [ ] Add Projects (Admin → Projects)
+   [ ] Add Work Experience (Admin → Experience)
+   [ ] Add Education (Admin → Education)
+   [ ] Add Skills (Admin → Skills)
+   
+5. SEO OPTIMIZATION
+   [ ] Admin → SEO Settings
+   [ ] Set meta description
+   [ ] Add keywords
+   [ ] Configure Open Graph tags
+   [ ] Add Google Analytics (if needed)
+   
+6. CHOOSE THEME
+   [ ] Admin → Themes
+   [ ] Select color theme
+   [ ] Preview changes
+
+───────────────────────────────────────────────────────────────
+
+🧪 TESTING
+───────────────────────────────────────────────────────────────
+
+[ ] Visit homepage - check everything loads
+[ ] Test contact form
+[ ] Test all navigation links
+[ ] Check CV download works
+[ ] Test on mobile devices
+[ ] Test on different browsers
+[ ] Check page load speed
+[ ] Verify all images load correctly
+[ ] Test theme switching
+[ ] Check social media links work
+
+───────────────────────────────────────────────────────────────
+
+🔐 FINAL SECURITY CHECK
+───────────────────────────────────────────────────────────────
+
+[ ] All setup files deleted
+[ ] Strong admin password set
+[ ] Database credentials secure
+[ ] .htaccess file present (auto-created)
+[ ] Error reporting disabled in production
+[ ] File permissions correct
+[ ] Backup database after content is added
+
+───────────────────────────────────────────────────────────────
+
+📊 ONGOING MAINTENANCE
+───────────────────────────────────────────────────────────────
+
+REGULAR TASKS:
+• Keep content updated
+• Check messages from contact form
+• Backup database weekly
+• Monitor website performance
+• Update projects and experience
+• Review and respond to inquiries
+
+SECURITY:
+• Change admin password periodically
+• Keep PHP version updated
+• Monitor for unusual activity
+• Regular database backups
+• Keep uploads folder clean
+
+───────────────────────────────────────────────────────────────
+
+🎉 CONGRATULATIONS!
+───────────────────────────────────────────────────────────────
+
+Your portfolio is now LIVE and ready to showcase your work!
+
+Share your portfolio:
+→ https://yourdomain.com
+
+Manage content:
+→ https://yourdomain.com/admin/
+
+Good luck! 🚀
+
+═══════════════════════════════════════════════════════════════
+

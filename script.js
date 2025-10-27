@@ -64,19 +64,30 @@ function initializeNavigation() {
         });
     });
 
-    // Smooth scrolling for navigation links
+    // Smooth scrolling for navigation links (only for internal anchor links)
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
             const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+            const isExternal = this.getAttribute('data-external') === 'true';
+            const hasTarget = this.getAttribute('target') === '_blank';
             
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 70; // Account for fixed navbar
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+            // Skip external links, links with target="_blank", or download links
+            if (isExternal || hasTarget || this.hasAttribute('download')) {
+                return; // Let the browser handle it normally
+            }
+            
+            // Only prevent default for internal anchor links (starting with #)
+            if (targetId && targetId.startsWith('#')) {
+                e.preventDefault();
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 70; // Account for fixed navbar
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     });
@@ -96,9 +107,13 @@ function initializeNavigation() {
         });
 
         navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
+            const href = link.getAttribute('href');
+            // Only apply active state to internal anchor links
+            if (href && href.startsWith('#')) {
+                link.classList.remove('active');
+                if (href === `#${current}`) {
+                    link.classList.add('active');
+                }
             }
         });
     });
@@ -127,14 +142,30 @@ function initializeScrollAnimations() {
     });
 }
 
-// Typing Effect for Hero Section
+// Typing Effect for Hero Section - Dynamic from Database
 function initializeTypingEffect() {
-    const roles = [
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    
+    // Get roles from data attribute or use defaults
+    let rolesData = heroSubtitle.getAttribute('data-roles');
+    let roles = [
         'Full-Stack Developer',
         'Mobile App Developer',
         'UI/UX Enthusiast',
         'Problem Solver'
     ];
+    
+    // If we have dynamic roles from the database, use them
+    if (rolesData) {
+        try {
+            const parsedRoles = JSON.parse(rolesData);
+            if (parsedRoles && parsedRoles.length > 0) {
+                roles = parsedRoles;
+            }
+        } catch (e) {
+            console.log('Using default roles');
+        }
+    }
     
     let roleIndex = 0;
     let charIndex = 0;
@@ -142,8 +173,6 @@ function initializeTypingEffect() {
     const typeSpeed = 100;
     const deleteSpeed = 50;
     const pauseTime = 2000;
-    
-    const heroSubtitle = document.querySelector('.hero-subtitle');
     
     function typeRole() {
         const currentRole = roles[roleIndex];

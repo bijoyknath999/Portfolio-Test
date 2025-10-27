@@ -1,0 +1,129 @@
+═══════════════════════════════════════════════════════════════
+   📦 PORTFOLIO INSTALLATION GUIDE
+═══════════════════════════════════════════════════════════════
+
+🚀 QUICK START (3 Easy Steps)
+───────────────────────────────────────────────────────────────
+
+1️⃣  UPLOAD FILES TO SERVER
+   - Upload all files to your web hosting (via cPanel/FTP)
+   - Typical location: public_html/ or www/
+
+2️⃣  RUN SETUP WIZARD
+   - Open your website URL in browser
+   - Add /setup.php to the URL
+   - Example: https://yoursite.com/setup.php
+   
+3️⃣  FOLLOW THE WIZARD
+   Step 1: Enter database credentials
+   Step 2: Import database schema (automatic)
+   Step 3: Create admin account
+   Step 4: Done! 🎉
+
+───────────────────────────────────────────────────────────────
+
+📋 SETUP WIZARD DETAILS
+───────────────────────────────────────────────────────────────
+
+STEP 1 - Database Configuration:
+• Database Host: Usually "localhost"
+• Database Name: Create in cPanel MySQL Databases
+• Username: Your MySQL username
+• Password: Your MySQL password
+
+The wizard will:
+✓ Test the database connection
+✓ Create database if it doesn't exist
+✓ Save configuration to config/database.php
+
+STEP 2 - Import Database:
+• Automatically imports database/portfolio.sql
+• Creates all required tables
+• Imports sample data and settings
+• One-click process!
+
+STEP 3 - Admin Account:
+• Username: Choose your admin username
+• Email: Your admin email
+• Password: Minimum 6 characters (use strong password!)
+• Creates your admin account
+
+STEP 4 - Complete:
+• Setup complete marker created
+• Ready to use!
+• Login to admin panel
+
+───────────────────────────────────────────────────────────────
+
+🔒 AFTER INSTALLATION (IMPORTANT!)
+───────────────────────────────────────────────────────────────
+
+FOR SECURITY, DELETE THESE FILES:
+✗ setup.php
+✗ .setup_complete
+✗ database/portfolio.sql (optional, keep for backup)
+
+───────────────────────────────────────────────────────────────
+
+🌐 ACCESS YOUR PORTFOLIO
+───────────────────────────────────────────────────────────────
+
+Frontend:
+→ https://yoursite.com/
+
+Admin Panel:
+→ https://yoursite.com/admin/login.php
+
+───────────────────────────────────────────────────────────────
+
+⚙️ REQUIREMENTS
+───────────────────────────────────────────────────────────────
+
+Server Requirements:
+✓ PHP 7.4 or higher
+✓ MySQL 5.7+ or MariaDB 10.2+
+✓ PDO Extension enabled
+✓ GD Library (for image processing)
+✓ File upload enabled (min 10MB)
+
+Folder Permissions:
+✓ uploads/ - 755 (create if doesn't exist)
+✓ config/ - 755
+
+───────────────────────────────────────────────────────────────
+
+🆘 TROUBLESHOOTING
+───────────────────────────────────────────────────────────────
+
+"Setup already completed" error:
+→ Delete .setup_complete file to run setup again
+
+"Database connection failed":
+→ Check database credentials in cPanel
+→ Ensure database exists
+→ Verify user has proper privileges
+
+"Cannot import database":
+→ Check database/portfolio.sql exists
+→ Ensure database user has CREATE privileges
+
+500 Internal Server Error:
+→ Check file permissions
+→ Enable error reporting in PHP
+→ Check server error logs
+
+───────────────────────────────────────────────────────────────
+
+📞 SUPPORT
+───────────────────────────────────────────────────────────────
+
+For issues or questions:
+1. Check this guide first
+2. Review server error logs
+3. Ensure all requirements are met
+4. Contact your hosting support for server issues
+
+───────────────────────────────────────────────────────────────
+
+Good luck with your portfolio! 🎨
+

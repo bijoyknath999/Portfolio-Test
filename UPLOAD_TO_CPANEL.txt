@@ -1,0 +1,95 @@
+═══════════════════════════════════════════════════════════════
+   📤 UPLOAD THESE FILES TO CPANEL
+═══════════════════════════════════════════════════════════════
+
+✅ UPLOAD ALL THESE FOLDERS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 admin/              (14 files - complete admin panel)
+📁 config/             (2 files - database config)
+📁 database/           (1 file - portfolio.sql ⚠️ IMPORT THIS)
+📁 includes/           (1 file - core functions)
+📁 uploads/            (empty or with your uploaded files)
+
+
+✅ UPLOAD ALL THESE FILES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  .htaccess               (VERY IMPORTANT - security & performance)
+✓  404.html                (error page)
+✓  bijoy.png               (profile image - or your own)
+✓  check_admin.php         (admin verification)
+✓  contact_handler.php     (contact form processing)
+✓  favicon.ico             (site icon)
+✓  index.php               (MAIN PORTFOLIO PAGE)
+✓  logo.png                (site logo)
+✓  maintenance.php         (maintenance mode page)
+✓  Resume of Bijoy Kumar Nath.pdf  (or your resume)
+✓  script.js               (frontend JavaScript)
+✓  styles.css              (frontend styling)
+✓  theme_handler.php       (theme switching)
+✓  upload_handler.php      (file upload handler)
+
+
+❌ DO NOT UPLOAD THIS FILE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✗  UPLOAD_TO_CPANEL.txt    (this guide - keep for reference only)
+
+
+📋 QUICK STEPS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CREATE DATABASE in cPanel (MySQL Databases)
+   Database name: portfolio_db
+
+2. IMPORT DATABASE
+   phpMyAdmin → Import → database/portfolio.sql
+
+3. UPLOAD ALL FILES
+   File Manager → public_html → Upload all folders & files
+
+4. EDIT DATABASE CONFIG
+   config/database.php → Add your DB credentials
+
+5. SET PERMISSIONS
+   uploads/ folder → 755
+
+6. LOGIN & CHANGE PASSWORD
+   yourdomain.com/admin/login.php
+   Username: admin
+   Password: admin123  ← CHANGE THIS!
+
+7. GO LIVE! 🚀
+
+
+🔐 SECURITY REMINDER:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After deployment:
+✓ Change admin password immediately
+✓ Update config/database.php with your DB details
+✓ Enable SSL certificate (HTTPS)
+✓ Test all features
+
+
+📊 FILE COUNT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Total folders: 5
+Total files: ~30
+Upload size: ~5 MB
+
+Estimated upload time: 2-5 minutes (depends on internet speed)
+
+
+✨ THAT'S IT!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your portfolio is clean and ready for production!
+All unnecessary files have been removed.
+Just upload and configure! 🎉
+
+═══════════════════════════════════════════════════════════════
+
+

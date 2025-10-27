@@ -534,6 +534,7 @@ $showThemeSelector = getSiteSetting('show_theme_selector') !== 'false';
                     if (width >= 90) clearInterval(interval);
                 }, 100);
             });
+        }
     });
     
     // Test email settings

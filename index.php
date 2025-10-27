@@ -18,8 +18,25 @@ $colorThemes = getColorThemes();
 $activeTheme = getActiveTheme();
 $seoSettings = getSEOSettings('home');
 
+// Get typing roles for hero animation
+$typingRolesJson = getSiteSetting('typing_roles');
+$typingRoles = $typingRolesJson ? $typingRolesJson : json_encode([
+    'Full-Stack Developer',
+    'Mobile App Developer',
+    'UI/UX Enthusiast',
+    'Problem Solver'
+]);
+
 // Set default values if no data exists (now dynamic from admin settings)
 $personalInfo = $personalInfo ?: getDefaultPersonalInfo();
+
+// Debug: Ensure resume_file is available
+if (!isset($personalInfo['resume_file']) || empty($personalInfo['resume_file'])) {
+    // Check if there's an old resume file in root
+    if (file_exists(__DIR__ . '/Resume of Bijoy Kumar Nath.pdf')) {
+        $personalInfo['resume_file'] = 'Resume of Bijoy Kumar Nath.pdf';
+    }
+}
 
 $seoSettings = $seoSettings ?: [
     'meta_title' => $personalInfo['name'] . ' - ' . $personalInfo['title'],
@@ -164,10 +181,10 @@ $seoSettings = $seoSettings ?: [
                 <li class="nav-item">
                     <a href="#contact" class="nav-link">Contact</a>
                 </li>
-                <?php if ($personalInfo['resume_file']): ?>
+                <?php if (!empty($personalInfo['resume_file'])): ?>
                 <li class="nav-item">
-                    <a href="<?php echo htmlspecialchars($personalInfo['resume_file']); ?>" class="nav-link" download="<?php echo htmlspecialchars($personalInfo['name']); ?>_Resume.pdf">
-                        <i class="fas fa-download"></i> CV
+                    <a href="<?php echo htmlspecialchars($personalInfo['resume_file']); ?>" class="nav-link cv-link" target="_blank" data-external="true">
+                        <i class="fas fa-file-pdf"></i> CV
                     </a>
                 </li>
                 <?php endif; ?>
@@ -188,7 +205,7 @@ $seoSettings = $seoSettings ?: [
                     <h1 class="hero-title">
                         Hi, I'm <span class="highlight"><?php echo htmlspecialchars($personalInfo['name']); ?></span>
                     </h1>
-                    <h2 class="hero-subtitle"><?php echo htmlspecialchars($personalInfo['title']); ?></h2>
+                    <h2 class="hero-subtitle" data-roles='<?php echo $typingRoles; ?>'><?php echo htmlspecialchars($personalInfo['title']); ?></h2>
                     <p class="hero-description">
                         <?php echo nl2br(htmlspecialchars($personalInfo['description'])); ?>
                         <?php if ($personalInfo['availability_text']): ?>
@@ -198,8 +215,8 @@ $seoSettings = $seoSettings ?: [
                     <div class="hero-buttons">
                         <a href="#projects" class="btn btn-primary">View My Work</a>
                         <a href="#contact" class="btn btn-secondary">Get In Touch</a>
-                        <?php if ($personalInfo['resume_file']): ?>
-                        <a href="<?php echo htmlspecialchars($personalInfo['resume_file']); ?>" class="btn btn-outline" download="<?php echo htmlspecialchars($personalInfo['name']); ?>_Resume.pdf">
+                        <?php if (!empty($personalInfo['resume_file'])): ?>
+                        <a href="<?php echo htmlspecialchars($personalInfo['resume_file']); ?>" class="btn btn-outline" download="<?php echo htmlspecialchars($personalInfo['name']); ?>_Resume.pdf" target="_blank">
                             <i class="fas fa-download"></i> Download CV
                         </a>
                         <?php endif; ?>

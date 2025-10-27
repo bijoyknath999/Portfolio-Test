@@ -1,6 +1,17 @@
 <?php
 require_once 'includes/functions.php';
-requireLogin();
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if user is logged in
+if (!isLoggedIn()) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized. Please login first.']);
+    exit;
+}
 
 header('Content-Type: application/json');
 
@@ -11,23 +22,57 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        throw new Exception('No file uploaded or upload error');
+    // Check if file was uploaded
+    if (!isset($_FILES['file'])) {
+        throw new Exception('No file provided in request');
+    }
+    
+    // Check for upload errors
+    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension'
+        ];
+        $errorCode = $_FILES['file']['error'];
+        $errorMsg = $errorMessages[$errorCode] ?? 'Unknown upload error';
+        throw new Exception($errorMsg . ' (Error code: ' . $errorCode . ')');
     }
     
     $file = $_FILES['file'];
     $uploadType = $_POST['type'] ?? 'general';
     
-    // Validate file type
-    $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!in_array($file['type'], $allowedTypes)) {
-        throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.');
+    // Validate file type based on upload type
+    $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    
+    if ($uploadType === 'resume') {
+        // For resumes, only allow PDF
+        $allowedTypes = ['application/pdf'];
+        $allowedExtensions = ['pdf'];
+        $maxSize = 10 * 1024 * 1024; // 10MB for PDFs
+        
+        if (!in_array($file['type'], $allowedTypes) && !in_array($fileExtension, $allowedExtensions)) {
+            throw new Exception('Invalid file type. Only PDF files are allowed for resumes. Uploaded: ' . $file['type']);
+        }
+    } else {
+        // For images
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+        $maxSize = 5 * 1024 * 1024; // 5MB for images
+        
+        if (!in_array($file['type'], $allowedTypes) && !in_array($fileExtension, $allowedExtensions)) {
+            throw new Exception('Invalid file type. Only JPEG, PNG, GIF, WebP, and SVG images are allowed. Uploaded: ' . $file['type']);
+        }
     }
     
-    // Validate file size (5MB max)
-    $maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size
     if ($file['size'] > $maxSize) {
-        throw new Exception('File too large. Maximum size is 5MB.');
+        $maxSizeMB = $maxSize / (1024 * 1024);
+        throw new Exception('File too large. Maximum size is ' . $maxSizeMB . 'MB.');
     }
     
     // Create uploads directory if it doesn't exist
@@ -55,11 +100,15 @@ try {
             $relativePath = 'uploads/' . $filename;
         }
         
-        // If it's a profile image, update the database
+        // Update database based on upload type
         if ($uploadType === 'profile') {
             $db = getDB();
             $stmt = $db->prepare("UPDATE personal_info SET profile_image = :image WHERE id = 1");
             $stmt->execute(['image' => $relativePath]);
+        } elseif ($uploadType === 'resume') {
+            $db = getDB();
+            $stmt = $db->prepare("UPDATE personal_info SET resume_file = :resume WHERE id = 1");
+            $stmt->execute(['resume' => $relativePath]);
         }
         
         echo json_encode([
